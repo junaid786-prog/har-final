@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <ListView
+        android:id="@+id/listPairedDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="400dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/listPairedDevices"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/editTextDeviceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/listPairedDevices"
+            android:layout_marginTop="16dp"
+            android:hint="Enter Device Name" />
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextDeviceName"
+            android:layout_marginTop="16dp"
+            android:minWidth="320dp"
+            android:text="Start" />
+
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnStart"
+            android:layout_marginTop="16dp"
+            android:minWidth="320dp"
+            android:visibility="gone"
+            android:text="Stop" />
+    </LinearLayout>
+</RelativeLayout>
