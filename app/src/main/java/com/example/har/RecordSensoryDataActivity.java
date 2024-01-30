@@ -25,6 +25,7 @@ public class RecordSensoryDataActivity extends AppCompatActivity {
     private Button btnConnect, btnStart, btnStop, btnChooseSensors;
     private Dialog chooseSensorsDialog;
     private SocketIO socketHandler;
+    private ConnectionHandler connectionHandler;
     private MySensorManager sensorManager;
     private String deviceId;
 
@@ -37,6 +38,7 @@ public class RecordSensoryDataActivity extends AppCompatActivity {
         btnStart = findViewById(R.id.btnStart);
         btnStop = findViewById(R.id.btnStop);
         btnChooseSensors = findViewById(R.id.btnChooseSensors);
+        connectionHandler = new ConnectionHandler();
 
         initSocketHandler();
         sensorManager = new MySensorManager(this);
@@ -53,10 +55,15 @@ public class RecordSensoryDataActivity extends AppCompatActivity {
             if (TextUtils.isEmpty(deviceId) || TextUtils.isEmpty(serverUrl)) {
                 showToast("Please enter Device ID and Server URL");
             } else {
-                if (Utility.isValidUrl(serverUrl)){
+                if (true){
                     try {
-                        socketHandler.connect(serverUrl);
+                        String url[] = serverUrl.split(":");
+                        String ip = url[0];
+                        int port = Integer.parseInt(url[1]);
+                       // socketHandler.connect(serverUrl);
+                        connectionHandler.connect(ip, port);
                     } catch (Exception e) {
+                        System.out.println(e);
                         showToast("Error occurred: " + e.getMessage());
                     }
                 } else {

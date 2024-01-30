@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
         btnCollectData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RecordSensoryDataActivity.class);
+                //Intent intent = new Intent(MainActivity.this, RecordSensoryDataActivity.class);
+                Intent intent = new Intent(MainActivity.this, MobileSensorActivity.class);
                 startActivity(intent);
             }
         });
