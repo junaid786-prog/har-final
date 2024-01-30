@@ -208,7 +208,7 @@ public class SensorDataService extends Service implements SensorEventListener {
                         Socket socket = new Socket(serverHost, serverPort);
 
                 // Create a DataOutputStream to send data to the server
-                DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());t
+                DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
                 outputStream.writeUTF(data);
                 outputStream.flush();
 
