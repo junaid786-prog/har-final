@@ -38,7 +38,7 @@ public class RecordSensoryDataActivity extends AppCompatActivity {
         btnStart = findViewById(R.id.btnStart);
         btnStop = findViewById(R.id.btnStop);
         btnChooseSensors = findViewById(R.id.btnChooseSensors);
-        connectionHandler = new ConnectionHandler();
+        connectionHandler = new ConnectionHandler(this, new Handler());
 
         initSocketHandler();
         sensorManager = new MySensorManager(this);

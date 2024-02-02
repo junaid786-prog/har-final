@@ -46,8 +46,10 @@ public class MySensorManager implements SensorEventListener {
 
         float[] values = event.values;
         SensorData data = new SensorData(deviceName, sensor_type, values[0], values[1], values[2]);
-        String jsonData = new Gson().toJson(data);
-        messageDelegator.sendMessage(jsonData);
+        String dataStr = data.buildSensorDataString(event.sensor.getStringType(), values, deviceName);
+        //String jsonData = new Gson().toJson(data);
+        if(dataStr != null)
+            messageDelegator.sendMessage(dataStr);
     }
 
     @Override

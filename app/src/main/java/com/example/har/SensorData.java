@@ -16,6 +16,19 @@ public class SensorData {
         this.z = z;
     }
 
+    public String buildSensorDataString(String sensorType, float[] values, String userId) {
+        StringBuilder builder = new StringBuilder("Source: Smart_Phone").append(", User ID: ").append(userId).append(", Timestamp: ").append(System.currentTimeMillis()).append(", ");
+
+        // Adding sensor type
+        builder.append("Sensor Type: "+sensorType).append(": ");
+
+        for (float value : values) {
+            builder.append(value).append(", ");
+        }
+        builder.delete(builder.length() - 2, builder.length());
+        builder.append("\n");
+        return builder.toString();
+    }
     @Override
     public String toString() {
         return "SensorData{" +

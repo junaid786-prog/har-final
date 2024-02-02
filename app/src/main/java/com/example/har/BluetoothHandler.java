@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 public class BluetoothHandler {
 
+    private static String TAG = "BluetoothHandler";
     private BluetoothAdapter bluetoothAdapter;
     private AcceptThread acceptThread;
     private ConnectThread connectThread;
@@ -277,7 +279,9 @@ public class BluetoothHandler {
 
         public void sendMessage (String message) {
             try {
-                mmOutStream.write(message.getBytes());
+                if (message != null && mmOutStream != null)
+                    mmOutStream.write(message.getBytes());
+                else Log.e(TAG, "sendMessage: " + message);
             } catch (IOException e) {
                 e.printStackTrace();
             }

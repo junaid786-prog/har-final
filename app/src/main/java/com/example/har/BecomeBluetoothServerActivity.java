@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.net.URL;
 import java.util.Set;
 
 public class BecomeBluetoothServerActivity extends AppCompatActivity {
@@ -30,6 +32,7 @@ public class BecomeBluetoothServerActivity extends AppCompatActivity {
 
    private BluetoothHandler bluetoothHandler;
    private SocketIO socketHandler;
+   private ConnectionHandler connectionHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,18 +46,26 @@ public class BecomeBluetoothServerActivity extends AppCompatActivity {
 
         initializeBluetooth();
         initSocketHandler();
+        initConnectionHandler();
 
         btnConnect.setOnClickListener(view -> {
             String serverUrl = editTextServerUrl.getText().toString();
             if (!serverUrl.isEmpty() && Utility.isValidUrl(serverUrl)) {
                 try {
-                    socketHandler.connect(serverUrl);
+                    URL url = new URL(serverUrl);
+                    String host = url.getHost();
+                    int port = url.getPort();
+                    System.out.println("URL \n" + host + " " + port);
+                    connectionHandler.connect(host, port);
+                    //socketHandler.connect(serverUrl);
                 } catch (Exception e) {
                     showToast("Error occurred: " + e.getMessage());
                 }
 
-                bluetoothHandler.startAcceptingConnection();
-
+                if(connectionHandler != null){
+                    System.out.println("Not Null");
+                    bluetoothHandler.startAcceptingConnection();
+                }
             }
             else {
                 showToast("Please enter a valid URL.");
@@ -63,7 +74,10 @@ public class BecomeBluetoothServerActivity extends AppCompatActivity {
             showToast("Connection started.");
         });
         btnDisconnect.setOnClickListener(view -> {
-            socketHandler.stop();
+            float values [] = {1, 1, 1, 1};
+            connectionHandler.sendMessage(new SensorData("junaid", 1, 1, 1, 1).buildSensorDataString("gravity", values, "12"));
+            connectionHandler.disconnect();
+            //socketHandler.stop();
         });
     }
 
@@ -76,8 +90,10 @@ public class BecomeBluetoothServerActivity extends AppCompatActivity {
             public void handleMessage(@NonNull Message msg_type) {
                 switch (msg_type.what) {
                     case Constants.MESSAGE_READ:
+                        Log.d("Ac", "message received");
                         String receivedMessage = (String) msg_type.obj;
-                        socketHandler.sendMessage(receivedMessage);
+                        connectionHandler.sendMessage(receivedMessage);
+                        //socketHandler.sendMessage(receivedMessage);
                         //updateReceivedMessage(receivedMessage);
                         break;
                     case Constants.CONNECTED:
@@ -125,7 +141,27 @@ public class BecomeBluetoothServerActivity extends AppCompatActivity {
             }
         });
     }
-
+    private void initConnectionHandler(){
+        connectionHandler = new ConnectionHandler(this, new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(@NonNull Message msg_type) {
+                switch (msg_type.what) {
+                    case Constants.SOCKET_CONNECTED:
+                        showToast("Socket Connected Successfully");
+                        btnConnect.setVisibility(View.GONE);
+                        btnDisconnect.setVisibility(View.VISIBLE);
+                        break;
+                    case Constants.SOCKET_DISCONNECTED:
+                        showToast("Socket Disconnected Successfully");
+                        btnConnect.setVisibility(View.VISIBLE);
+                        btnDisconnect.setVisibility(View.GONE);
+                    case Constants.SOCKET_ERROR:
+                        showToast("Error While Connecting To Server");;
+                        break;
+                }
+            }
+        });
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
