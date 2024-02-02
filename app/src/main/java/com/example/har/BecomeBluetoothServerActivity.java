@@ -74,8 +74,6 @@ public class BecomeBluetoothServerActivity extends AppCompatActivity {
             showToast("Connection started.");
         });
         btnDisconnect.setOnClickListener(view -> {
-            float values [] = {1, 1, 1, 1};
-            connectionHandler.sendMessage(new SensorData("junaid", 1, 1, 1, 1).buildSensorDataString("gravity", values, "12"));
             connectionHandler.disconnect();
             //socketHandler.stop();
         });
@@ -187,5 +185,10 @@ public class BecomeBluetoothServerActivity extends AppCompatActivity {
         }
 
         listConnectedDevices.setAdapter(adapter_paired_devices);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
